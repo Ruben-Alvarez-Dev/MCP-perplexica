@@ -121,6 +121,20 @@ async def list_tools() -> List[Tool]:
             },
         ),
         Tool(
+            name="local_search",
+            description="Search using local knowledge base",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "The local search query",
+                    },
+                },
+                "required": ["query"],
+            },
+        ),
+        Tool(
             name="youtube_transcript",
             description="Extract transcript from a YouTube video",
             inputSchema={
