@@ -184,6 +184,12 @@ def make_vane_request(
 @server.call_tool()
 async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
     """Handle tool calls."""
+    if name != "health_check" and name != "youtube_transcript":
+        query = arguments.get("query", "").strip()
+        if not query:
+            return [TextContent(type="text", text="Error: query cannot be empty")]
+        arguments["query"] = query
+
     try:
         if name == "web_search":
             result = make_vane_request(
