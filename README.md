@@ -54,11 +54,11 @@ cp .env.example .env
 Edit `.env` with your Perplexica URL:
 
 ```env
-PERPLEXICA_BASE_URL=http://localhost:YOUR_PORT
+PERPLEXICA_BASE_URL=http://localhost:3000
 LOG_LEVEL=INFO
 ```
 
-The server will auto-detect an available port, or you can set `SERVER_PORT` explicitly.
+The default port is 3000, but update `PERPLEXICA_BASE_URL` if your instance runs elsewhere.
 
 ## 🔧 Configuration for AI Assistants
 
