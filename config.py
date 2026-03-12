@@ -26,9 +26,7 @@ class Config:
 
     def validate(self) -> bool:
         """Validate configuration."""
-        if not self.vane_base_url:
-            return False
-        return True
+        return bool(self.vane_base_url)
 
 
 def get_config() -> Config:
