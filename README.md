@@ -237,6 +237,10 @@ And it'll actually go find the information, cite sources, and come back with rea
 - The web is slow. Try `speed` mode for quick queries.
 - Perplexica might be overloaded. Give it a moment.
 
+**"Empty results"**
+- Try rephrasing your query
+- Some sources may be blocked in your region
+
 **Import errors**
 - Make sure you're in a virtual environment
 - Python 3.11+ recommended, 3.9 should work
