@@ -188,6 +188,12 @@ async def call_tool(name: str, arguments: Dict[str, Any]) -> List[TextContent]:
         query = arguments.get("query", "").strip()
         if not query:
             return [TextContent(type="text", text="Error: query cannot be empty")]
+        if len(query) > 500:
+            return [
+                TextContent(
+                    type="text", text="Error: query too long (max 500 characters)"
+                )
+            ]
         arguments["query"] = query
 
     try:
