@@ -223,6 +223,7 @@ Once connected, you can ask your AI assistant things like:
 Search for the latest developments in quantum computing
 Find academic papers about transformer architectures from 2024
 Get a YouTube transcript for the lecture on neural networks
+Search for images of aurora borealis
 ```
 
 And it'll actually go find the information, cite sources, and come back with real results.
