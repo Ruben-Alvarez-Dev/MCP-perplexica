@@ -8,6 +8,7 @@ from typing import Optional, Literal
 
 import httpx
 from mcp.server.fastmcp import FastMCP
+from tavily import AsyncTavilyClient
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -77,6 +78,14 @@ def get_base_url() -> str:
 VANE_BASE_URL = get_base_url()
 logger.info(f"Targeting Vane at: {VANE_BASE_URL}")
 
+TAVILY_API_KEY = os.getenv("TAVILY_API_KEY")
+tavily_client: Optional[AsyncTavilyClient] = None
+if TAVILY_API_KEY:
+    tavily_client = AsyncTavilyClient(api_key=TAVILY_API_KEY)
+    logger.info("Tavily search enabled")
+else:
+    logger.warning("TAVILY_API_KEY not set — tavily_search tool will be unavailable")
+
 
 @mcp.tool()
 async def vane_search(
@@ -97,7 +106,37 @@ async def vane_search(
             return json.dumps(response.json(), indent=2)
     except httpx.HTTPError as e:
         logger.error(f"Vane API error: {e}")
-        return json.dumps({"error": str(e), "sources": [], "error": True})
+        return json.dumps({"error": str(e), "sources": [], "success": False})
+
+
+@mcp.tool()
+async def tavily_search(
+    query: str,
+    search_depth: Literal["basic", "advanced"] = "advanced",
+    max_results: int = 5,
+    topic: Literal["general", "news", "finance"] = "general",
+) -> str:
+    """Search using Tavily for web results optimised for LLMs
+
+    Args:
+        query: The search query (max 400 chars)
+        search_depth: basic (fast, 1 credit) or advanced (thorough, 2 credits)
+        max_results: Number of results to return (1-20)
+        topic: Search category — general, news, or finance
+    """
+    if tavily_client is None:
+        return json.dumps({"error": "TAVILY_API_KEY is not configured", "results": []})
+    try:
+        response = await tavily_client.search(
+            query=query[:400],
+            search_depth=search_depth,
+            max_results=max_results,
+            topic=topic,
+        )
+        return json.dumps(response, indent=2)
+    except Exception as e:
+        logger.error(f"Tavily API error: {e}")
+        return json.dumps({"error": str(e), "results": []})
 
 
 if __name__ == "__main__":
